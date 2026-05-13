@@ -41,9 +41,10 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/ai-app:${{ github.sha }}
 
+
       - name: Clone GitOps Repo (Repo 2)
         run: |
-          git clone https://github.com/kutty27/gitops-repo.git
+          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/kutty27/gitops-repo.git
 
       - name: Update image in Repo 2
         run: |
@@ -55,6 +56,8 @@ jobs:
           cd gitops-repo
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+
           git add .
-          git commit -m "update image version"
-          git push
+          git commit -m "update image version" || echo "No changes"
+
+          git push origin main
